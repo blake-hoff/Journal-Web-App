@@ -82,6 +82,7 @@ const AppContent = () => {
 		setSelectedID(-1);
 		setEntryValue('');
 		setEntryName('');
+		setSelectedDate(dayjs());
 	};
 
 	// populating the grid
@@ -101,7 +102,7 @@ const AppContent = () => {
 
 			const data = await response.json();
 			console.log(data.items);
-			console.log('get all items')
+			console.log('GET (Items)')
 
 			setGridData(data.items);
 		} 
@@ -126,7 +127,7 @@ const AppContent = () => {
 
 			const data = await response.json();
 			console.log(data.items);
-			console.log('get all types')
+			console.log('GET (Types)')
 
 			setTypeData(data.items);
 		} 
@@ -166,7 +167,7 @@ const AppContent = () => {
 				handleGetAll();
 				setUserID(data.id);
 				setUsersName(data.username)
-				console.log("Logged in");
+				console.log("User is Logged In");
 				return;
 			}
 		}
@@ -181,11 +182,7 @@ const AppContent = () => {
 
 	const handleSetID = React.useCallback(async (item_id, item_date, item_type, item_name, item_desc) => {
 		try {
-			console.log(selectedID, item_id);
-
 			if(selectedID === item_id){
-				setSelectedID(-1);
-				// setSelectedDate(dayjs());
 				clearActionBar();
 			}
 			else{
