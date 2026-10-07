@@ -161,13 +161,13 @@ def create_entry():
 
         return jsonify({
             'success': True,
-            'message': f'Created new entry because an entry did not exist for date {userDate}.'
+            'message': f'Created new entry because the limit of ({selectedTypeMax}) has not been reached for date {userDate} in category {selectedTypeName}.'
         }), 200
     
     else: # too many entries for this day.
         return jsonify({
             'success': False,
-            'message': f'Could not create a new entry because the max entries has been reached.'
+            'message': f'Could not create new entry because the limit of ({selectedTypeMax}) has been reached for date {userDate} in category {selectedTypeName}.'
         }), 200
 
 # Update an entry

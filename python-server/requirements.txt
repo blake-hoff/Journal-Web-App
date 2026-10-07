@@ -1,6 +1,9 @@
-# with the venv active use
-# pip install -r requirements.txt
-# to install the following required packages
+# To use the venv use:
+# "source .venv/bin/activate"
+
+# Now, with the virtual environment active,
+# to install the following required packages, use:
+# "pip install -r requirements.txt"
 datetime
 
 flask

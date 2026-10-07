@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CreateIcon from '@mui/icons-material/Create';
 import Tooltip from '@mui/material/Tooltip';
 
 function ItemGrid({
@@ -18,11 +19,13 @@ function ItemGrid({
     handleEditItem
     }) {
     return (
+    // filteredData
     <Box sx={{ width: '99vw'}}>
+    {filteredData.length > 0 ? 
     <Grid container spacing={2} mt={4} justifyContent={'center'} 
-        className="item-grid"
-        sx={{px: 4, pr: 4, maxHeight:'calc(80vh - 80px)', overflowY:'scroll', alignContent:'flex-start'}}
-        >
+    className="item-grid"
+    sx={{px: 4, pr: 4, maxHeight:'calc(80vh - 80px)', overflowY:'Auto', alignContent:'flex-start'}}
+    >
             {filteredData.map((item) => (
                 <Grid key={item.id} sx={{minWidth:0, width:"100%"}}>
                     <Card 
@@ -100,6 +103,18 @@ function ItemGrid({
                 </Grid>
             ))}
             </Grid>
+            : <Typography variant="h2" component="h1" 
+                sx={{ 
+                    color: "#ffffff", 
+                    mt: 6, 
+                    ml: 3,
+                    mr: 3,
+                    mb: 6,
+                    textAlign: "center", 
+                    fontWeight: "bold" 
+                }}>
+                    <CreateIcon fontSize="huge" sx={{backgroundColor:"#ff9f00"}}/> Add an entry to get started
+                </Typography>}
         </Box>
     );
 }

@@ -87,8 +87,7 @@ const AppContent = () => {
 
 	// populating the grid
 	const getGridData = React.useCallback(async () => {
-		let path = '/view/';
-		let url = server_url + path;
+		let url = `${server_url}/view/`;
 		const token = localStorage.getItem("authToken");
 
 		try {
@@ -113,8 +112,7 @@ const AppContent = () => {
 
 	// populating the type data dropdown/filter
 	const getTypeData = React.useCallback(async () => {
-		let path = '/types/';
-		let url = server_url + path;
+		let url = `${server_url}/types/`;
 		const token = localStorage.getItem("authToken");
 
 		try {
@@ -148,8 +146,7 @@ const AppContent = () => {
 
 	// determine if the user has a session
 	const checkLogin = React.useCallback(async () => {
-		let path = '/auth/user/';
-		let url = server_url + path;
+		let url = `${server_url}/auth/user/`;
 		const token = localStorage.getItem("authToken");
 		
 		// only make the request if the token exists.
@@ -200,8 +197,7 @@ const AppContent = () => {
 	}, [selectedID]);
 
 	const handleEditItem = React.useCallback(async () => {
-		let path = '/update/' + selectedID;
-		let url = server_url + path;
+		let url = `${server_url}/update/${selectedID}`;
 		const token = localStorage.getItem("authToken");
 
 		const payload = {
@@ -239,8 +235,7 @@ const AppContent = () => {
 	}, [handleGetAll, server_url, entryName, selectedID, entryValue, selectedDate, selectedType]);
 
 	const handleDeleteItem = React.useCallback(async (id) => {
-			let path = '/item/' + id
-			let url = server_url + path
+			let url = `${server_url}/item/${id}`;
 			console.log(url)
 			const token = localStorage.getItem("authToken");
 
@@ -265,8 +260,7 @@ const AppContent = () => {
 	}, [handleGetAll, server_url]);
 
 	const createEntry = async (entryValue, selectedDate, selectedType, selectedName) => {
-		let path = '/create/';
-		let url = server_url + path;
+		let url = `${server_url}/create/`;
 		const token = localStorage.getItem("authToken");
 
 		const payload = {
@@ -299,6 +293,7 @@ const AppContent = () => {
 			}
 
 			console.log('Success:', responseData);
+			showMessage(responseData.message);
 
 			handleGetAll();
 			clearActionBar();
@@ -309,8 +304,7 @@ const AppContent = () => {
 	};
 
 	const handleSignUp = async (username, email, password) => {
-		let path = '/auth/signup/';
-		let url = server_url + path;
+		let url = `${server_url}/auth/signup/`;
 
 		console.log(username, email, password)
 
@@ -364,8 +358,7 @@ const AppContent = () => {
 	};
 
 	const handleLogin = async (username, password) => {
-		let path = '/auth/login/';
-		let url = server_url + path;
+		let url = `${server_url}/auth/login/`;
 
 		console.log(username, password)
 
@@ -411,8 +404,7 @@ const AppContent = () => {
 	};
 
 	const handleLogout = React.useCallback(async () => {
-		let path = '/auth/logout/';
-		let url = server_url + path;
+		let url = `${server_url}/auth/logout/`;
 		console.log(url);
 		const token = localStorage.getItem("authToken");
 

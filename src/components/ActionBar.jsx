@@ -211,7 +211,7 @@ function ActionBar({
 			/>
 
 			{/* enter */}
-			<Tooltip title="Enter" arrow>
+			<Tooltip title="Create" arrow>
 				<IconButton onClick={() => createEntry(entryValue, selectedDate, selectedType, entryName)} variant="contained" color="primary" sx={{ padding: '16px' }}>
 					<AddBoxIcon sx={{ fontSize: 32, "&:hover": { color: "#afc8fb" } }}/>
 				</IconButton>
