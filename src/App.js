@@ -46,11 +46,11 @@ const AppContent = () => {
     const [gridData, setGridData] = useState([]); // array of {id, type_id, name, icon, date, created_at, description}
 	const [filteredData, setFilteredData] = useState([]);
 	
-	const [filteredTypes, setFilteredTypes] = useState(["Outfit", "Meal", "Event"]); // array of [typeName ...]
+	const [filteredTypes, setFilteredTypes] = useState([]); // array of [typeName ...]
 	const [typeData, setTypeData] = useState([]); // array of {name, created_at} (use [id-1] to access a particular id; ids start at 1)
 	
 	// ----- ActionBar Fields -----
-	const [selectedType, setSelectedType] = useState('Outfit');
+	const [selectedType, setSelectedType] = useState('');
 	const [selectedID, setSelectedID] = useState(-1); // stores the ID that will be used for editing
 	const [entryValue, setEntryValue] = useState('');
 	const [entryName, setEntryName] = useState('');
@@ -65,7 +65,7 @@ const AppContent = () => {
 	useEffect(() => {
 		const filteredResults = gridData.filter(item => { // looking at all items in the grid, do some tests, 
 			try{
-				const getGridItemType = typeData[item.type_id-1].name; 
+				const getGridItemType = typeData[item.type_id-1]; 
 
 				return filteredTypes.includes(getGridItemType);
 			}catch{
@@ -99,14 +99,17 @@ const AppContent = () => {
 			}
 			);
 
-			const data = await response.json();
-			console.log(data.items);
+			const responseData = await response.json();
+			console.log(responseData.items);
 			console.log('GET (Items)')
 
-			setGridData(data.items);
+			setGridData(responseData.items);
+			return {"responseData": responseData, "response": response};
 		} 
 		catch (err) {
 			console.log("Something went wrong!", err);
+			return {"error": err};
+
 		}
 	}, [server_url]);
 
@@ -128,6 +131,8 @@ const AppContent = () => {
 			console.log('GET (Types)')
 
 			setTypeData(data.items);
+			setFilteredTypes(data.items);
+			setSelectedType(data.items[0]);
 		} 
 		catch (err) {
 			console.log("Something went wrong!", err);
@@ -136,13 +141,27 @@ const AppContent = () => {
 
 	const handleGetAll = React.useCallback(async () => {
 		try {
-			getGridData();
-			getTypeData();
+			let gridResults = await getGridData();
+			let typeResults = await getTypeData();
+			console.log("get all");
+			console.log(gridResults);
+
+			if(gridResults.length === 2){
+				if(!gridResults.response.ok){
+					showMessage(gridResults.responseData.message, `Invalid (${gridResults.response.status})`, `error`);
+				}
+				else{
+					showMessage(gridResults.responseData.message);
+				}
+
+			}
+
+
 		}
 		catch (err) {
 			console.error(err);
 		}
-	}, [getGridData, getTypeData]);
+	}, [getGridData, getTypeData, showMessage]);
 
 	// determine if the user has a session
 	const checkLogin = React.useCallback(async () => {
@@ -218,21 +237,28 @@ const AppContent = () => {
 					body: JSON.stringify(payload)          // Converts object into a valid JSON string
 				});
 
+				const responseData = await response.json(); // Parses returning JSON string to object
 				if (!response.ok) {
-					throw new Error(`HTTP error! Status: ${response.status}`);
+					// throw new Error(`HTTP error! Status: ${response.status}`);
+					showMessage(
+						responseData.message,
+						`Invalid (${response.status})`,
+						'error'
+					);
 				}
 
-				const responseData = await response.json(); // Parses returning JSON string to object
 				console.log('Success:', responseData);
+				showMessage(responseData.message);
 			}
 			catch (err) {
 				console.error("Something went wrong!", err);
-				alert(err);
+				showMessage(`Error editing entry with ID (${selectedID}).`, err.message,'error');
 				return null;
 			}
+
 			handleGetAll(); // retrieve the updated grid after successful edit.
 			clearActionBar();
-	}, [handleGetAll, server_url, entryName, selectedID, entryValue, selectedDate, selectedType]);
+	}, [handleGetAll, server_url, entryName, selectedID, entryValue, selectedDate, selectedType, showMessage]);
 
 	const handleDeleteItem = React.useCallback(async (id) => {
 			let url = `${server_url}/item/${id}`;
@@ -246,18 +272,27 @@ const AppContent = () => {
 						"Authorization": `Bearer ${token}`
 					}}
 				);
-				const data = await response.json();
+				const responseData = await response.json();
 
-				console.log(data)
+				console.log(responseData)
+				if(!response.ok){
+					showMessage(
+						responseData.message,
+						`Invalid (${response.status})`,
+						'error'
+					);
+				}
+				showMessage(responseData.message);
+				
+				handleGetAll(); // retrieve the updated grid after deletion.
+				clearActionBar();
 			}
-			catch (err) {
+			catch(err) {
 				console.error("Something went wrong!", err);
-				alert(err);
-				return null;
+				showMessage(`Error deleting entry with ID (${id}).`, err.message,'error');
 			}
-			clearActionBar();
-			handleGetAll(); // retrieve the updated grid after deletion.
-	}, [handleGetAll, server_url]);
+
+	}, [handleGetAll, server_url, showMessage]);
 
 	const createEntry = async (entryValue, selectedDate, selectedType, selectedName) => {
 		let url = `${server_url}/create/`;
@@ -300,6 +335,7 @@ const AppContent = () => {
 		} 
 		catch (err) {
 			console.error(err);
+			showMessage(`Error creating entry with description (${entryValue}).`, err.message,'error');
 		}
 	};
 
@@ -354,6 +390,7 @@ const AppContent = () => {
 		} 
 		catch (err) {
 			console.error(err);
+			showMessage(`Error signing up with account named ${username}.`, err.message,'error');
 		}
 	};
 
@@ -400,6 +437,7 @@ const AppContent = () => {
 		} 
 		catch (err) {
 			console.error(err);
+			showMessage(`Error logging in to account named ${username}.`, err.message,'error');
 		}
 	};
 
@@ -418,28 +456,21 @@ const AppContent = () => {
 				}}
 			);
 
-			if (!response.ok) {
-				const responseData = await response.json();
-				showMessage(
-					responseData.message,
-					`Server not found. Still logged out successfully! (${response.status})`,
-					'success'
-				);
-				// can still perform log out on the frontend; 
-				// the server does not need to clear anything.
-				setLoggedIn(0);
-				localStorage.removeItem("authToken");
-				setUserID(null);
-				setUsersName(null);
-				throw new Error(`HTTP error! Status: ${response.status} Message: ${responseData.message}`);
-			}
-
+			
 			const responseData = await response.json(); // Parses returning JSON string to object
 			console.log('Success:', responseData);
 			setLoggedIn(0);
 			localStorage.removeItem("authToken");
 			setUserID(null);
 			setUsersName(null);
+			if (!response.ok) {
+				showMessage(
+					responseData.message,
+					`Server not found. Still logged out successfully! (${response.status})`,
+					'success'
+				);
+				throw new Error(`HTTP error! Status: ${response.status} Message: ${responseData.message}`);
+			}
 			showMessage(
 				responseData.message,
 				`Logged out successfully! (${response.status})`,

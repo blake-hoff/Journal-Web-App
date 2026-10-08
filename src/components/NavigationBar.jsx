@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 
 import {Typography, Box, AppBar, Toolbar, IconButton, InputLabel, FormControl, Select, MenuItem} from '@mui/material';
 // misc buttons
@@ -14,20 +15,27 @@ function NavigationBar({
 	url_list,
 	usersName
 	}) {
+		const [showSettings, setShowSettings] = useState(0);
     return (
         <AppBar position="static" sx={{bgcolor: '#00ff66'}}>
 			<Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
 				<Box flexWrap="wrap" display="flex" alignItems="center" gap={2} width={'100%'}>
-					<img src="https://images.unsplash.com/vector-1775556825284-3b697bc284bf?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.1.0" 
-						alt="clotrack"
-						style={{ height: 35 }}
-					/>
+					<IconButton 
+						onClick={() => showSettings ? setShowSettings(0) : setShowSettings(1)}
+						sx={showSettings ? { backgroundColor:"#4f86f8"} : {}}
+						>
+						<img src="https://images.unsplash.com/vector-1775556825284-3b697bc284bf?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.1.0" 
+							alt="clotrack"
+							style={{ height: 35 }}
+						/>
+					</IconButton>
+
 
 					<Typography variant="h6" fontWeight="bold" sx={{color: '#4f86f8'}}>
 						{ usersName ? `${title} - ${usersName}` : title}
 					</Typography>
 
-					{0 === 1 && <FormControl 
+					{showSettings === 1 && <FormControl 
 						sx={{
 							"& .MuiOutlinedInput-root": {
 								color: "#052668",

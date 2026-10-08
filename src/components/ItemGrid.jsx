@@ -39,7 +39,7 @@ function ItemGrid({
                                 <Grid size={{xs:12, md: 1 }} sx={{ display: 'flex', justifyContent: 'center' }}>
                                     <Tooltip title={item.id === selectedID ? "De-Select" : "Select"} arrow>
                                         <IconButton 
-                                            onClick={() => handleSetID(item.id, item.date, typeData[item.type_id-1].name, item.name, item.description)}
+                                            onClick={() => handleSetID(item.id, item.date, typeData[item.type_id-1], item.name, item.description)}
                                             sx={{bgcolor:"#ffffff"}}
                                             >
                                             {item.id === selectedID ? 
@@ -64,9 +64,9 @@ function ItemGrid({
                                         {/* set the text to the format 'type - name' */}
 
                                         {typeData && typeData[item.type_id - 1] ? (
-                                            ((typeData[item.type_id - 1].name === item.name) || item.name.includes(typeData[item.type_id - 1].name)) 
+                                            ((typeData[item.type_id - 1] === item.name) || item.name.includes(typeData[item.type_id - 1])) 
                                             ? (item.name) 
-                                            : (`${typeData[item.type_id - 1].name} - ${item.name}`)
+                                            : (`${typeData[item.type_id - 1]} - ${item.name}`)
                                         ) : ("Loading...")}
                                     </Typography>
                                     

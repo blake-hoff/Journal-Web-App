@@ -164,8 +164,8 @@ function ActionBar({
 						label="Type"
 					> 
 						{typeData.map((item) => ( 
-						<MenuItem key={item.name} value={item.name}> 
-							{item.name} 
+						<MenuItem key={item} value={item}> 
+							{item} 
 						</MenuItem> 
 						))} 
 					</Select> 
@@ -240,16 +240,16 @@ function ActionBar({
 				MenuProps={MenuProps}
 			>
 				{typeData.map((type) => {
-					const selected = filteredTypes.includes(type.name);
+					const selected = filteredTypes.includes(type);
 					const SelectionIcon = selected ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
 
 					return(
-					<MenuItem key={type.name} value={type.name}>
+					<MenuItem key={type} value={type}>
 						<SelectionIcon
 							fontSize="small"
 							style={{ marginRight: 8, padding: 9, boxSizing: 'content-box'}}
 						/>
-						<ListItemText primary={type.name}/>
+						<ListItemText primary={type}/>
 					</MenuItem>
 					);
 				})}

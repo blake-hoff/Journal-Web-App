@@ -244,7 +244,7 @@ def update_entry(entry_id):
 
         return jsonify({
             'success': True,
-            'message': f'Updated entry.'
+            'message': f'Updated entry successfully.'
         }), 200
     else:
         return jsonify({
@@ -312,9 +312,7 @@ def get_all_types():
 
     return jsonify({
         'success': True,
-        'items': [{'name': type.name, # (db indexes start at 1, there is no zero element.)
-                    'created_at': type.created_at
-                    } for type in types],
+        'items': [type.name for type in types],
         'date': date.today() # extra info for frontend to know the date from the server.
     }), 200
 
