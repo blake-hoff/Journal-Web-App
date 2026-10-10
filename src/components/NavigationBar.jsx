@@ -26,7 +26,7 @@ function NavigationBar({
 						>
 						<img src="https://images.unsplash.com/vector-1775556825284-3b697bc284bf?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.1.0" 
 							alt="clotrack"
-							style={{ height: 35 }}
+							style={{ height: 30 }}
 						/>
 					</IconButton>
 

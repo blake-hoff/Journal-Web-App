@@ -145,18 +145,7 @@ const AppContent = () => {
 			let typeResults = await getTypeData();
 			console.log("get all");
 			console.log(gridResults);
-
-			if(gridResults.length === 2){
-				if(!gridResults.response.ok){
-					showMessage(gridResults.responseData.message, `Invalid (${gridResults.response.status})`, `error`);
-				}
-				else{
-					showMessage(gridResults.responseData.message);
-				}
-
-			}
-
-
+			console.log(typeResults);
 		}
 		catch (err) {
 			console.error(err);
