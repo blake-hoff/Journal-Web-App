@@ -46,14 +46,14 @@ const AppContent = () => {
     const [gridData, setGridData] = useState([]); // array of {id, type_id, name, icon, date, created_at, description}
 	const [filteredData, setFilteredData] = useState([]);
 	
-	const [filteredTypes, setFilteredTypes] = useState([]); // array of [typeName ...]
 	const [typeData, setTypeData] = useState([]); // array of {name, created_at} (use [id-1] to access a particular id; ids start at 1)
 	
 	// ----- ActionBar Fields -----
-	const [selectedType, setSelectedType] = useState('');
 	const [selectedID, setSelectedID] = useState(-1); // stores the ID that will be used for editing
+	const [selectedType, setSelectedType] = useState('');
 	const [entryValue, setEntryValue] = useState('');
 	const [entryName, setEntryName] = useState('');
+	const [filteredTypes, setFilteredTypes] = useState(''); // array of [typeName, ...]
 	
 	// selected date (default = today)
 	const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -127,30 +127,30 @@ const AppContent = () => {
 			);
 
 			const data = await response.json();
-			console.log(data.items);
-			console.log('GET (Types)')
+			// console.log(data.items);
+			// console.log('GET (Types)')
 
 			setTypeData(data.items);
-			setFilteredTypes(data.items);
-			setSelectedType(data.items[0]);
+			if(filteredTypes === '' && selectedType === ''){
+				setFilteredTypes(data.items);
+				setSelectedType(data.items[0]);
+			}
 		} 
 		catch (err) {
 			console.log("Something went wrong!", err);
 		}
-	}, [server_url]);
+	}, [server_url, filteredTypes, selectedType]);
 
 	const handleGetAll = React.useCallback(async () => {
 		try {
-			let gridResults = await getGridData();
-			let typeResults = await getTypeData();
-			console.log("get all");
-			console.log(gridResults);
-			console.log(typeResults);
+			await getGridData();
+			await getTypeData();
+			// showMessage('Successfully loaded entries', '', `success`);
 		}
 		catch (err) {
 			console.error(err);
 		}
-	}, [getGridData, getTypeData, showMessage]);
+	}, [getGridData, getTypeData]);
 
 	// determine if the user has a session
 	const checkLogin = React.useCallback(async () => {
@@ -173,7 +173,8 @@ const AppContent = () => {
 				setUserID(data.id);
 				setUsersName(data.username)
 				console.log("User is Logged In");
-				return;
+				// showMessage(`Logged in to ${data.username} (ID:${data.id})`, ``, `success`);
+				return null;
 			}
 		}
 		// reach here if the token does not exist 

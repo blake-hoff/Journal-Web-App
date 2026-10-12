@@ -67,8 +67,8 @@ function ActionBar({
 							backgroundColor: "secondary.main",
 								"&:hover": {
 									backgroundColor: "#4f86f8",
-									color: "#00ff66",
-									boxShadow: "0px 0px 5px 3px #00ff66",
+									color: "#ffffff",
+									boxShadow: "0px 0px 5px 3px #ffffff",
 								}
 							}}
 					>

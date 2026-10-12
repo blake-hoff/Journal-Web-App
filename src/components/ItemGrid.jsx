@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 
-import { IconButton } from '@mui/material';
+import { IconButton, Button } from '@mui/material';
 import {Grid, Card, CardContent, Typography, Box} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -8,6 +9,8 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CreateIcon from '@mui/icons-material/Create';
 import Tooltip from '@mui/material/Tooltip';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 function ItemGrid({
     filteredData,
@@ -18,15 +21,52 @@ function ItemGrid({
     handleSetID,
     handleEditItem
     }) {
+        const pageLimit = 30; // amount per page
+        
+        const [pageNumber, setPageNumber] = useState(0); // current page number the user is on (starts at 0)
+        const [pagedData, setPagedData] = useState([]); // 
+
+        // reset the page number to 0 upon any change in filteredData
+        useEffect(() => {
+            setPageNumber(0);
+        }, [filteredData]);
+
+        // update pagedData upon any change in filteredData
+        useEffect(() => {
+            const start = pageNumber*pageLimit;
+            const end = start+pageLimit;
+            
+            const slicedItems = filteredData.slice(start,end);
+            setPagedData(slicedItems);
+        }, [filteredData, pageLimit, pageNumber]); 
+
+        // handle the user pressing the page changing buttons
+        const handlePageChange = (pageChange) => {
+            const maxPage = Math.max(0,Math.ceil(filteredData.length/pageLimit)-1); //max final page
+
+            if(pageChange === 0){
+                if(pageNumber === 0){
+                    setPageNumber(maxPage);
+                }
+                else{
+                    setPageNumber(0);
+                }
+            }
+            else if(pageChange === -1){
+                setPageNumber(prev => Math.max(0, prev - 1));
+            }
+            else if(pageChange === 1 && pageNumber*pageLimit < filteredData.length){
+                setPageNumber(prev => Math.min(maxPage, prev + 1));
+            }
+        };
     return (
-    // filteredData
     <Box sx={{ width: '99vw'}}>
     {filteredData.length > 0 ? 
     <Grid container spacing={2} mt={4} justifyContent={'center'} 
     className="item-grid"
     sx={{px: 4, pr: 4, maxHeight:'calc(80vh - 80px)', overflowY:'Auto', alignContent:'flex-start'}}
     >
-            {filteredData.map((item) => (
+            {pagedData.map((item) => (
                 <Grid key={item.id} sx={{minWidth:0, width:"100%"}}>
                     <Card 
                         sx={{
@@ -115,6 +155,57 @@ function ItemGrid({
                 }}>
                     <CreateIcon fontSize="huge" sx={{backgroundColor:"#ff9f00"}}/> Add an entry to get started
                 </Typography>}
+            
+                <Box sx={{display: 'flex', alignItems:'center',justifyContent: 'center',mt: 0.5}}>
+                    <Tooltip title={`Prev`} arrow>
+
+                        <Button
+                            onClick={() => handlePageChange(-1)} 
+                            disabled={pageNumber===0}
+                            sx={{ mr:1, transition: "all 0.3s ease",
+                                color: "#fefefe",
+                                backgroundColor: "secondary.main",
+                                "&:hover": {
+                                    backgroundColor: "#4f86f8",
+                                    color: "#00ff66",
+                                }
+                            }}
+                            >
+                            <KeyboardArrowLeftIcon />
+                        </Button>
+                    </Tooltip>
+                    
+                    <Tooltip title={pageNumber === 0 ? `Jump to Last Page` : "Jump to First Page"} arrow>
+                        <Button
+                            onClick={() => handlePageChange(0)} 
+                            sx={{transition: "all 0.3s ease",
+                                color: "#fefefe",backgroundColor: "secondary.main",
+                                "&:hover": {backgroundColor: "#4f86f8",color: "#00ff66",}
+                            }}
+                        >
+                            {`${pageNumber+1} / ${Math.max(0, Math.ceil(filteredData.length/pageLimit)-1)+1}`}
+                        </Button>
+                    </Tooltip>
+
+                    <Tooltip title={`Next`} arrow>
+                        <Button
+                            disabled={pageNumber===Math.ceil(filteredData.length/pageLimit)-1}
+                            onClick={() => handlePageChange(1)} 
+                            sx={{ ml: 1, transition: "all 0.3s ease",
+                                color: "#fefefe",
+                                backgroundColor: "secondary.main",
+                                "&:hover": {
+                                    backgroundColor: "#4f86f8",
+                                    color: "#00ff66",
+                                }
+                            }}
+                            >
+                            <KeyboardArrowRightIcon />
+                        </Button>
+                    </Tooltip>
+
+                </Box>
+                
         </Box>
     );
 }

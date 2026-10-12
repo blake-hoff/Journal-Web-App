@@ -26,7 +26,7 @@ function NavigationBar({
 						>
 						<img src="https://images.unsplash.com/vector-1775556825284-3b697bc284bf?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.1.0" 
 							alt="clotrack"
-							style={{ height: 30 }}
+							style={{ height: 25 }}
 						/>
 					</IconButton>
 
@@ -73,7 +73,7 @@ function NavigationBar({
 					</FormControl>}
 
 
-					{loggedIn === 1 &&
+					{loggedIn === 1 && showSettings === 1 &&
 					<Tooltip title="Logout" arrow>
 						<IconButton
 							sx={{ ml: 'auto', transition: "all 0.3s ease",
