@@ -150,19 +150,28 @@ def create_entry():
         print(f'date time converted {userDateAsDT}')
 
         entry = Entry(description=usersDesc,
-                        icon='https://images.unsplash.com/vector-1775556825284-3b697bc284bf?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.1.0',
-                        entry_date=userDateAsDT,
-                        user_id=userID,
-                        type_id=selectedTypeID,
-                        name=entryName
-                       )
-        db.session.add(entry)
-        db.session.commit()
+                    entry_date=userDateAsDT,
+                    user_id=userID,
+                    type_id=selectedTypeID,
+                    name=entryName
+                    )
+        # use a try statement for a database operation that could fail.
+        try:
+            db.session.add(entry)
+            db.session.commit()
 
-        return jsonify({
-            'success': True,
-            'message': f'Created new entry because the limit of ({selectedTypeMax}) has not been reached for date {userDate} in category {selectedTypeName}.'
-        }), 200
+            return jsonify({
+                'success': True,
+                'message': f'Created new entry because the limit of ({selectedTypeMax}) has not been reached for date {userDate} in category {selectedTypeName}.'
+            }), 200
+        
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Could not create item: {str(e)}. Database error.") # log error
+            return jsonify({
+                'success': False,
+                'message': f'Could not create item: {str(e)}. Database error.'
+            }), 400
     
     else: # too many entries for this day.
         return jsonify({
@@ -238,14 +247,22 @@ def update_entry(entry_id):
         selected_entry.description = usersDesc
         selected_entry.entry_date = userDateAsDT
         selected_entry.type_id = selectedTypeID
+        
+        try:
+            db.session.add(selected_entry)
+            db.session.commit()
 
-        db.session.add(selected_entry)
-        db.session.commit()
-
-        return jsonify({
-            'success': True,
-            'message': f'Updated entry successfully.'
-        }), 200
+            return jsonify({
+                'success': True,
+                'message': f'Updated entry {entry_id} successfully.'
+            }), 200
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Could not update item {entry_id}: {str(e)}. Database error.") # log error
+            return jsonify({
+                'success': False,
+                'message': f'Could not update item {entry_id}: {str(e)}. Database error.'
+            }), 400
     else:
         return jsonify({
             'success': False,
@@ -262,7 +279,7 @@ def delete_entry(entry_id):
     outfitEntry = Entry.query.filter_by(id=entry_id).first()
 
     # the user id of the database entry must match the session user id.
-    outfitUserID = outfitEntry.user_id
+    outfitUserID = outfitEntry.user_id if outfitEntry else None
 
 
     if outfitUserID != userID: # do not allow a malicious user to delete someone elses entry.
@@ -287,7 +304,7 @@ def delete_entry(entry_id):
 
         return jsonify({
             'success': True,
-            'message': 'Deleted entry succcessfully.'
+            'message': f'Deleted entry {entry_id} succcessfully.'
             }), 200
     
     except Exception as e:
@@ -345,13 +362,22 @@ def create_entry_type():
 
     else: # add to database
         entry = EntryType(name=usersTypeName, max_per_day=3)
-        db.session.add(entry)
-        db.session.commit()
+        try:
+            db.session.add(entry)
+            db.session.commit()
 
-        return jsonify({
-            'success': True,
-            'message': f'Created new entryType because one did not exist with name {usersTypeName}.'
-        }), 200
+            return jsonify({
+                'success': True,
+                'message': f'Created new entryType because one did not exist with name {usersTypeName}.'
+            }), 200
+        
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Could not create entryType: {str(e)}. Database error.") # log error
+            return jsonify({
+                'success': False,
+                'message': f'Could not create entryType: {str(e)}. Database error.'
+            }), 400
 
 # Update an entry in the type table
 @app.route('/api/types/update/', methods=['POST'])
@@ -377,12 +403,20 @@ def update_entry_type():
     # if the type already exists, must update with new information
     if query_type and query_type.name != usersTypeName:
         query_type.name = usersTypeName
-        db.session.commit()
+        try:
+            db.session.commit()
 
-        return jsonify({
-            'success': True,
-            'message': f'Updated TntryType name because an EntryType did exist with name {usersTypeName}.'
-        }), 200
+            return jsonify({
+                'success': True,
+                'message': f'Updated EntryType name because an EntryType did exist with name {usersTypeName}.'
+            }), 200
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Could not update entry_type {usersTypeID}: {str(e)}. Database error.") # log error
+            return jsonify({
+                'success': False,
+                'message': f'Could not update entry_type {usersTypeID}: {str(e)}. Database error.'
+            }), 400        
 
     else:     # if it is not in the database return an error.
         return jsonify({
@@ -489,9 +523,17 @@ def sign_up():
                     email=userEmail,
                     password_hash=passwordHash
                     )
-        db.session.add(new_user)
-        db.session.commit()
-
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Could not create account: {str(e)}. Database error.") # log error
+            return jsonify({
+                'success': False,
+                'message': f'Could not create account: {str(e)}. Database error.'
+            }), 400
+        
         return jsonify({
             'success': True,
             'message': f'Created new user because an account with the username \'{userName}\' did not exist yet.'
