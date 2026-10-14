@@ -64,7 +64,6 @@ def get_all_items():
         'items': [{'id': item.id,
                    'type_id': item.type_id,
                     'name':item.name,
-                    'icon':item.icon,
                     'date': item.entry_date,
                     'created_at': item.created_at,
                     'description': item.description

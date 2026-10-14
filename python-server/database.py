@@ -47,8 +47,6 @@ class Entry(db.Model):
     name = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text, nullable=True)
 
-    icon = db.Column(db.String(255), nullable=True)
-
     entry_date = db.Column(db.DateTime, nullable=False)
 
     created_at = db.Column(db.DateTime, default=datetime.datetime.now, nullable=False)

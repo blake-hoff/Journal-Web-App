@@ -43,7 +43,7 @@ const AppContent = () => {
 	const [server_url, set_server_url] = useState(python_anywhere_url);
 	const [userID, setUserID] = useState(null);
 	const [usersName, setUsersName] = useState(null);
-    const [gridData, setGridData] = useState([]); // array of {id, type_id, name, icon, date, created_at, description}
+    const [gridData, setGridData] = useState([]); // array of {id, type_id, name, date, created_at, description}
 	const [filteredData, setFilteredData] = useState([]);
 	
 	const [typeData, setTypeData] = useState([]); // array of {name, created_at} (use [id-1] to access a particular id; ids start at 1)
