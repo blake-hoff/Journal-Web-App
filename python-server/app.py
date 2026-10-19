@@ -317,6 +317,7 @@ def delete_entry(entry_id):
 def get_all_types():
     token_user_id = get_jwt_identity()
     userID = int(token_user_id)
+    print(userID)
 
     if userID is None:
         return jsonify({
@@ -612,14 +613,15 @@ def my_invalid_token_callback(error_string):
         "details": error_string
     }), 401
 
-# for any request with no token in the header, send 200.
+# for any request with no token in the header, send 401.
 @jwt.unauthorized_loader
 def my_unauthorized_callback(error_string):
     return jsonify({
+        "success": False,
         "logged_in": False,
         "error": "Missing authorization header.",
         "details": error_string
-    }), 200
+    }), 401
 
 @app.route("/api/auth/user/")
 @jwt_required(optional=True)
