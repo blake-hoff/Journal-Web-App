@@ -32,7 +32,7 @@ function NavigationBar({
 
 
 					<Typography variant="h6" fontWeight="bold" sx={{color: '#4f86f8'}}>
-						{ usersName ? `${title} - ${usersName}` : title}
+						{ usersName ? `${usersName}` : title}
 					</Typography>
 
 					{showSettings === 1 && <FormControl 
