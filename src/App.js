@@ -100,8 +100,8 @@ const AppContent = () => {
 			);
 
 			const responseData = await response.json();
-			console.log(responseData.items);
-			console.log('GET (Items)')
+			// console.log(responseData.items);
+			// console.log('GET (Items)')
 
 			setGridData(responseData.items);
 			return {"responseData": responseData, "response": response};
@@ -252,7 +252,7 @@ const AppContent = () => {
 
 	const handleDeleteItem = React.useCallback(async (id) => {
 			let url = `${server_url}/item/${id}`;
-			console.log(url)
+			// console.log(url)
 			const token = localStorage.getItem("authToken");
 
 			try{
@@ -264,7 +264,7 @@ const AppContent = () => {
 				);
 				const responseData = await response.json();
 
-				console.log(responseData)
+				// console.log(responseData)
 				if(!response.ok){
 					showMessage(
 						responseData.message,
@@ -332,7 +332,7 @@ const AppContent = () => {
 	const handleSignUp = async (username, email, password) => {
 		let url = `${server_url}/auth/signup/`;
 
-		console.log(username, email, password)
+		// console.log(username, email, password)
 
 		const payload = {
 			username: username,
@@ -387,7 +387,7 @@ const AppContent = () => {
 	const handleLogin = async (username, password) => {
 		let url = `${server_url}/auth/login/`;
 
-		console.log(username, password)
+		// console.log(username, password)
 
 		const payload = {
 			username: username,
@@ -433,8 +433,13 @@ const AppContent = () => {
 
 	const handleLogout = React.useCallback(async () => {
 		let url = `${server_url}/auth/logout/`;
-		console.log(url);
+		// console.log(url);
 		const token = localStorage.getItem("authToken");
+		// always remove the browser side information regarding login info. 
+		setLoggedIn(0);
+		localStorage.removeItem("authToken");
+		setUserID(null);
+		setUsersName(null);
 
 		try {
 			const response = await fetch(url, {
@@ -449,10 +454,6 @@ const AppContent = () => {
 			
 			const responseData = await response.json(); // Parses returning JSON string to object
 			console.log('Success:', responseData);
-			setLoggedIn(0);
-			localStorage.removeItem("authToken");
-			setUserID(null);
-			setUsersName(null);
 			if (!response.ok) {
 				showMessage(
 					responseData.message,

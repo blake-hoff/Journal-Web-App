@@ -73,7 +73,7 @@ function NavigationBar({
 					</FormControl>}
 
 
-					{loggedIn === 1 && showSettings === 1 &&
+					{showSettings === 1 &&
 					<Tooltip title="Logout" arrow>
 						<IconButton
 							sx={{ ml: 'auto', transition: "all 0.3s ease",

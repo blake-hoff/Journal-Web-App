@@ -158,21 +158,22 @@ function ItemGrid({
             
                 <Box sx={{display: 'flex', alignItems:'center',justifyContent: 'center',mt: 0.5}}>
                     <Tooltip title={`Prev`} arrow>
-
-                        <Button
-                            onClick={() => handlePageChange(-1)} 
-                            disabled={pageNumber===0}
-                            sx={{ mr:1, transition: "all 0.3s ease",
-                                color: "#fefefe",
-                                backgroundColor: "secondary.main",
-                                "&:hover": {
-                                    backgroundColor: "#4f86f8",
-                                    color: "#00ff66",
-                                }
-                            }}
-                            >
-                            <KeyboardArrowLeftIcon />
-                        </Button>
+                        <span>
+                            <Button
+                                onClick={() => handlePageChange(-1)} 
+                                disabled={pageNumber===0}
+                                sx={{ mr:1, transition: "all 0.3s ease",
+                                    color: "#fefefe",
+                                    backgroundColor: "secondary.main",
+                                    "&:hover": {
+                                        backgroundColor: "#4f86f8",
+                                        color: "#00ff66",
+                                    }
+                                }}
+                                >
+                                <KeyboardArrowLeftIcon />
+                            </Button>
+                        </span>
                     </Tooltip>
                     
                     <Tooltip title={pageNumber === 0 ? `Jump to Last Page` : "Jump to First Page"} arrow>

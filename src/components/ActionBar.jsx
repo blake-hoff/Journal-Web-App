@@ -48,9 +48,20 @@ function ActionBar({
 		};
 
 		const handleChange = (event) => {
-    		const {
-      			target: { value },
-    			} = event;
+			// console.log(event.target.value);
+			let filterLength = event.target.value.length;
+			const {
+				target: { value },
+			} = event;
+
+			// console.log(filterLength);
+			if(filterLength === 1){ // set the selected type to the final filtered type.
+				setSelectedType(event.target.value[0])
+			}
+			else if(filterLength === 0){ // prevent deselecting all filter types. should always have at least one.
+				return
+			}
+
 			setFilteredTypes(typeof value === 'string' ? value.split(',') : value,);
   		};
 
