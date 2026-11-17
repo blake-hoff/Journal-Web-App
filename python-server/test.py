@@ -110,7 +110,7 @@ def test_delete_type_invalid(auth_client):
                                   json={"type_id": 50},
                                   headers=auth_client.header) 
     print(response.json)
-    assert response.status_code == 404
+    assert response.status_code == 404 # this type does not exist
     assert response.json["success"] == False
 
 def test_update_type_invalid(auth_client):

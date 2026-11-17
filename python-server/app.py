@@ -339,6 +339,13 @@ def get_all_types():
 def create_entry_type():
     token_user_id = get_jwt_identity()
     userID = int(token_user_id)
+    print(userID)
+
+    if userID not in [1, 4]:
+        return jsonify({
+            'success': False,
+            "error": "Unauthorized user."
+        }), 401
 
     data = request.get_json() # data sent from the user frontend
     # print(data)
@@ -386,6 +393,12 @@ def update_entry_type():
     token_user_id = get_jwt_identity()
     userID = int(token_user_id)
 
+    if userID not in [1, 4]:
+        return jsonify({
+            'success': False,
+            "error": "Unauthorized user."
+        }), 401
+
     data = request.get_json() # data sent from the user frontend
     
     if not data:
@@ -430,6 +443,12 @@ def update_entry_type():
 def delete_entry_type():
     token_user_id = get_jwt_identity()
     userID = int(token_user_id)
+
+    if userID not in [1, 4]:
+        return jsonify({
+            'success': False,
+            "error": "Unauthorized user."
+        }), 401
 
     data = request.get_json() # data sent from the user frontend
 
