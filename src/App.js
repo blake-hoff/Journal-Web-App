@@ -239,9 +239,14 @@ const AppContent = () => {
 						'error'
 					);
 				}
-
-				console.log('Success:', responseData);
-				showMessage(responseData.message);
+				if(responseData.success){
+					console.log('Success:', responseData);
+					handleGetAll(); // retrieve the updated grid after successful edit.
+					clearActionBar();
+				}
+				else{
+					showMessage(responseData.message);
+				}
 			}
 			catch (err) {
 				console.error("Something went wrong!", err);
@@ -249,8 +254,6 @@ const AppContent = () => {
 				return null;
 			}
 
-			handleGetAll(); // retrieve the updated grid after successful edit.
-			clearActionBar();
 	}, [handleGetAll, server_url, entryName, selectedID, entryValue, selectedDate, selectedType, showMessage]);
 
 	const handleDeleteItem = React.useCallback(async (id) => {
@@ -275,10 +278,15 @@ const AppContent = () => {
 						'error'
 					);
 				}
-				showMessage(responseData.message);
-				
-				handleGetAll(); // retrieve the updated grid after deletion.
-				clearActionBar();
+				if(responseData.success){
+					console.log('Success:', responseData);
+					
+					handleGetAll(); // retrieve the updated grid after deletion.
+					clearActionBar();
+				}
+				else{
+					showMessage(responseData.message);
+				}
 			}
 			catch(err) {
 				console.error("Something went wrong!", err);
@@ -319,12 +327,15 @@ const AppContent = () => {
 				);
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}
-
-			console.log('Success:', responseData);
-			showMessage(responseData.message);
-
-			handleGetAll();
-			clearActionBar();
+			if(responseData.success){
+				console.log('Success:', responseData);
+				
+				handleGetAll();
+				clearActionBar();
+			}
+			else{
+				showMessage(responseData.message);
+			}
 		} 
 		catch (err) {
 			console.error(err);
