@@ -54,6 +54,7 @@ const AppContent = () => {
 	const [entryValue, setEntryValue] = useState('');
 	const [entryName, setEntryName] = useState('');
 	const [filteredTypes, setFilteredTypes] = useState(''); // array of [typeName, ...]
+	const [enterButton, setEnterButton] = useState(true);
 	
 	// selected date (default = today)
 	const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -83,6 +84,7 @@ const AppContent = () => {
 		setEntryValue('');
 		setEntryName('');
 		setSelectedDate(dayjs());
+		setEnterButton(true);
 	};
 
 	// populating the grid
@@ -198,6 +200,7 @@ const AppContent = () => {
 				setSelectedType(item_type);
 				setEntryName(item_name); // can use the grid data since i have the id already.
 				setEntryValue(item_desc);
+				setEnterButton(false);
 			}
 		}
 		catch (err) {
@@ -513,6 +516,7 @@ const AppContent = () => {
 					setSelectedType={setSelectedType}
 					filteredTypes={filteredTypes}
 					setFilteredTypes={setFilteredTypes}
+					enterButton={enterButton}
 				/>
 
 				<ItemGrid

@@ -1,16 +1,19 @@
 import * as React from 'react';
 
 import {Box, IconButton, TextField, InputLabel, FormControl, Select, MenuItem} from '@mui/material';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import Tooltip from '@mui/material/Tooltip';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import ListItemText from '@mui/material/ListItemText';
+
+// icons
+import RefreshIcon from '@mui/icons-material/Refresh';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import DifferenceIcon from '@mui/icons-material/Difference';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 
 // for the calendar date selection
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -32,7 +35,8 @@ function ActionBar({
 	selectedType,
 	setSelectedType,
 	filteredTypes,
-	setFilteredTypes
+	setFilteredTypes,
+	enterButton
 	}) {
 		const ITEM_HEIGHT = 48;
 		const ITEM_PADDING_TOP = 8;
@@ -221,10 +225,13 @@ function ActionBar({
 				}}
 			/>
 
-			{/* enter */}
-			<Tooltip title="Create" arrow>
+			{/* create or duplicate button */}
+			<Tooltip title={enterButton ? "Create" : "Duplicate"} arrow>
 				<IconButton onClick={() => createEntry(entryValue, selectedDate, selectedType, entryName)} variant="contained" color="primary" sx={{ padding: '16px' }}>
-					<AddBoxIcon sx={{ fontSize: 32, "&:hover": { color: "#afc8fb" } }}/>
+					{enterButton ?
+						<NoteAddIcon sx={{ fontSize: 32, "&:hover": { color: "#afc8fb" } }}/> 
+						:
+						<DifferenceIcon sx={{ fontSize: 32, "&:hover": { color: "#afc8fb" } }}/> }
 				</IconButton>
 			</Tooltip>
 
